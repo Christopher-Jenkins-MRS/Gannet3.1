@@ -35,19 +35,14 @@ function MRS_struct = DICOMRead(MRS_struct,metabfile,waterfile)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 %%% PREPARATION %%%
 % Loop over number of datasets
 ii = MRS_struct.ii;
 
-% Locate folder and find all files in it. Will usually all be either upper or
-% lower case, so concatenating the results of both should be fine and with
-% no overlap.
-% dcm_file_list = [dir([folder,'/*.DCM']); dir([folder,'/*.dcm'])]; % may
-% cause problems on win/unix systems, take out for now % GO 11/16/2016
+% Locate folder and find all files in it.
 [folder,~,~] = fileparts(metabfile); % GO 11/01/2016
-dcm_file_list = dir([folder,'/*.dcm']); % GO 11/16/2016
+dcm_file_list = [dir([folder,filesep,'*.DCM']); dir([folder,filesep,'*.dcm'])]; % CWJ: Modified dicom listing
+
 fprintf('%d water-suppressed DCM files detected in %s.\n',length(dcm_file_list),folder);
 
 disp('Reading water-suppressed files...')
@@ -121,7 +116,8 @@ end
 % Set up the file name array.
 if nargin == 3
     [waterfolder,~,~] = fileparts(waterfile);
-    water_file_list = dir([waterfolder,'/*.DCM']);
+    water_file_list = [dir([waterfolder,filesep,'*.DCM']); dir([waterfolder,filesep,'*.dcm'])]; % CWJ: Modified dicom listing
+    
     fprintf('%d water-unsuppressed DCM files detected in %s.\n',length(water_file_list),waterfolder);
     disp('Reading water-unsuppressed files...')
     water_file_names = sort_nat({water_file_list.name});
